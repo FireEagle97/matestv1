@@ -1,0 +1,104 @@
+# Laravel-specific files
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+.env
+.env.*
+.env.backup
+.env.testing
+.env.dusk.local
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+.env.example
+.env.jsonc
+
+# Laravel Mix
+/public/hot
+/public/mix-manifest.json
+/npm-debug.log*
+/yarn-error.log*
+
+# React-specific files
+/build/
+/.eslintcache
+/coverage/
+
+# Testing and CI
+/phpunit.result.cache
+/.phpunit.result.cache
+
+
+# IDE-specific files
+.vscode/*
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+
+# Logs and temporary files
+*.log
+*.cache
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Miscellaneous
+*.lock
+*.pid
+*.seed
+*.pid.lock
+*.orig
+*.old
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Coverage and reports
+coverage/
+*.lcov
+.jest/
+
+# Build artifacts
+build/
+out/
+dist/
+
+# Temporary files created by editors
+*.swp
+*.swo
+*.tmp
+
+# JetBrains IDEs
+*.iml
+.idea/
+
+# Azure-specific files
+azure-pipelines.yml
+*.azure-pipelines
+
+# Kubernetes
+*.kubeconfig
+.kube/
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Miscellaneous
+logs/
+pids/

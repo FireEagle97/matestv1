@@ -1,0 +1,143 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Project Overview
+
+*   **Type:** Web Application (Laravel)
+*   **Description:** Modify the Streamit Laravel movie/TV streaming platform into matesTv—a marketplace where independent producers can upload, sell, and stream movies.
+*   **Primary Goal:** Enable producers to manage content and payments, allow users to purchase and stream movies, and equip admins to oversee platform operations.
+
+## Project Structure
+
+### Framework-Specific Routing
+
+*   **Directory Rules:**
+
+    *   laravel@9: Define web routes in `routes/web.php` and API routes in `routes/api.php` (using Sanctum for API auth).
+    *   Example: Web Routes → `routes/web.php` grouping with `middleware(['auth','verified'])` mapped to resource controllers.
+    *   Example: API Routes → `routes/api.php` with `prefix('api')`, versioned namespace, and `Route::apiResource` definitions.
+
+### Core Directories
+
+*   **Versioned Structure:**
+
+    *   `app/Http/Controllers`: Laravel 9 controllers leveraging Form Requests for validation.
+    *   `app/Models`: Eloquent models (`Producer`, `Movie`, `Purchase`, `Payment`, etc.).
+    *   `resources/views`: Blade templates and partials, styled with Bootstrap or Tailwind.
+    *   `storage/app/public`: Uploaded media files and proof-of-ownership documents.
+    *   `database/migrations`: Versioned schema definitions for all entities.
+
+### Key Files
+
+*   **Stack-Versioned Patterns:**
+
+    *   `routes/web.php`: Defines web routes using `Route::resource` and named routes.
+    *   `routes/api.php`: Defines API endpoints under `api` middleware group.
+    *   `app/Http/Controllers/AuthController.php`: Handles registration, login, email verification, and security questions.
+    *   `app/Http/Controllers/MovieController.php`: Manages uploads, dispatches FFmpeg HLS transcoding jobs, and triggers admin review.
+    *   `resources/views/layouts/app.blade.php`: Base layout with asset pipeline integration via Laravel Mix.
+
+## Tech Stack Rules
+
+*   **Version Enforcement:**
+
+    *   <php@8.x>: Enable `declare(strict_types=1)`, use union types and constructor property promotion.
+    *   laravel@9: Utilize Form Request classes, Eloquent factories/seeders, and Laravel Sanctum for API authentication.
+    *   node@16+: Employ Laravel Mix for asset compilation; mirror `scripts` in `package.json` to match `webpack.mix.js`.
+
+## PRD Compliance
+
+*   **Non-Negotiable:**
+
+    *   "Stripe Connect for split payments with 50% commission": Must be implemented on payout.
+    *   "Minimum payout threshold of $50": Enforce in PaymentController business logic.
+    *   "AWS S3 or DigitalOcean Spaces + CDN": Configure `filesystems.php` disk `s3` or `spaces` accordingly.
+    *   "HLS streams for adaptive bitrate": Use FFmpeg in queued jobs to generate `.m3u8` playlists and segment files.
+    *   "Manual admin review of proof documents": Build AdminProofReviewController with file type/size validation and review workflow.
+
+## App Flow Integration
+
+*   **Stack-Aligned Flow:**
+
+    *   Producer Registration Flow → `routes/web.php` → `AuthController@register` → sends email verification.
+    *   Movie Upload Flow → `MovieController@store` → stores files on S3, dispatches `TranscodeMovie` job.
+    *   Purchase Flow → `PurchaseController@store` → integrates Stripe/PayPal SDK, records transaction, grants library access.
+    *   Admin Approval Flow → `AdminMovieController@approve`/`reject` → sends notification via queued mail jobs.
+
+## Best Practices
+
+*   PHP
+
+    *   Enable `strict_types` and follow PSR-12 coding standard.
+    *   Leverage dependency injection in controllers and services.
+    *   Cover critical business logic with unit and feature tests.
+
+*   Laravel
+
+    *   Use Form Request classes for all input validation.
+    *   Employ Eloquent relationships, scopes, and resource collections.
+    *   Offload heavy tasks (transcoding, emailing) to queues (Redis driver).
+    *   Enforce authorization via policies and gates.
+    *   Use events and listeners for decoupled notification handling.
+
+*   MySQL
+
+    *   Ensure proper indexing on foreign keys and frequently filtered columns.
+    *   Use migrations/seeds to maintain schema consistency across environments.
+    *   Prevent N+1 queries by eager loading relationships.
+
+*   AWS S3 / DigitalOcean Spaces
+
+    *   Generate signed temporary URLs for secure access to protected media.
+    *   Implement lifecycle rules to purge stale proof files.
+
+*   FFmpeg
+
+    *   Encapsulate transcoding logic in Laravel Jobs.
+    *   Clean up local temp files after S3 upload.
+
+*   Stripe
+
+    *   Use official PHP SDK; verify webhook signatures.
+    *   Handle split payments via Stripe Connect accounts.
+
+*   PayPal
+
+    *   Integrate PayPal PHP SDK; verify IPN/webhook events.
+    *   Record transaction statuses and handle disputes.
+
+*   Blade / Frontend
+
+    *   Build reusable components and partials.
+    *   Version assets using Mix or Vite for cache busting.
+
+*   Git
+
+    *   Adopt feature-branch workflow; enforce PR reviews.
+    *   Write descriptive, atomic commit messages.
+    *   Use pre-commit hooks (e.g., linting, tests).
+
+## Rules
+
+*   Derive folder/file patterns directly from techStackDoc versions.
+*   For laravel@9: Organize controllers in `app/Http/Controllers` with corresponding Form Requests.
+*   Never mix Laravel routing conventions with other frameworks.
+*   Use resource controllers and named routes for CRUD operations.
+
+## Rules Metrics
+
+Before starting the project development, create a metrics file in the root of the project called
+
+`cursor_metrics.md`.
+
+### Instructions:
+
+*   Each time a cursor rule is used as context, update `cursor_metrics.md`.
+
+*   Use the following format for `cursor_metrics.md`: Rules Metrics Usage The number of times rules is used as context
+
+    *   rule-name.mdc: 5
+    *   another-rule.mdc: 2
+    *   ...other rules
