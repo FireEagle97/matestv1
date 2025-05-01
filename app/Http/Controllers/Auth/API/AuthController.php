@@ -33,18 +33,73 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = $this->registerTrait($request);
+        try {
+            // Determine if this is a producer registration based on the URL
+            $isProducer = $request->is('producer/register') || $request->is('api/producer/register');
+            
+            // Add user_type to request
+            $request->merge([
+                'user_type' => $isProducer ? 'producer' : 'user',
+                // Map confirm_password to password_confirmation for Laravel validation
+                'password_confirmation' => $request->confirm_password
+            ]);
 
-        if ($user instanceof \Illuminate\Http\JsonResponse && $user->status() == 422) {
-            $message = $user->original['message'] ?? 'The email has already been taken.';
-            return response()->json(['message' => $message], 422);
+            // Validate the request
+            $validator = validator($request->all(), [
+                'first_name' => 'required|string|max:191',
+                'last_name' => 'required|string|max:191',
+                'email' => 'required|string|email|max:191|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+                'confirm_password' => 'required|string|min:8'
+            ]);
+
+            if ($validator->fails()) {
+                if ($request->is_ajax || $request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'status' => false,
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+                return back()->withErrors($validator)->withInput();
+            }
+
+            // Create the user using the trait
+            $user = $this->registerTrait($request);
+
+            if ($user instanceof \Illuminate\Http\JsonResponse) {
+                return $user;
+            }
+
+            // Generate token for API access
+            $token = $user->createToken(setting('app_name'))->plainTextToken;
+
+            // Login the user
+            Auth::login($user);
+
+            // Prepare the response
+            $response = [
+                'status' => true,
+                'token' => $token,
+                'user' => new RegisterResource($user),
+                'message' => __('messages.register_successfull'),
+                'redirect' => $isProducer ? route('producer.dashboard') : route('home')
+            ];
+
+            if ($request->is_ajax || $request->ajax() || $request->wantsJson()) {
+                return response()->json($response);
+            }
+
+            return redirect($response['redirect'])->with('success', $response['message']);
+
+        } catch (\Exception $e) {
+            if ($request->is_ajax || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ], 422);
+            }
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
-
-        $success['token'] = $user->createToken(setting('app_name'))->plainTextToken;
-        $success['name'] = $user->name;
-        $userResource = new RegisterResource($user);
-
-        return $this->sendResponse($userResource, __('messages.register_successfull'));
     }
 
     /**
