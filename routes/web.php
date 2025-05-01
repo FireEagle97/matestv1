@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\MobileSettingController;
 use Modules\Setting\Http\Controllers\Backend\SettingsController;
 use Modules\Frontend\Http\Controllers\FrontendController;
+use App\Http\Controllers\Producer\ProducerController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Producer\ProducerDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +37,7 @@ Route::get('storage-link', function () {
     return Artisan::call('storage:link');
 });
 
-Route::get('/', [FrontendController::class, 'index'])->name('user.login');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth','admin']], function () {
     Route::get('notification-list', [NotificationsController::class, 'notificationList'])->name('notification.list');
@@ -184,13 +187,52 @@ Route::group(['prefix' => 'app', ['middleware' => ['auth','admin']]], function (
 
 Route::middleware(['web'])->group(function () {
     // Public routes
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
+    Route::get('login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'showUserLogin'])
+        ->name('login');
+    Route::post('login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+    
+    // Producer login routes
+    Route::get('producer/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'showUserLogin'])
+        ->name('producer.login');
+    Route::post('producer/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+    
+    // Admin login routes
+    Route::get('admin/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
+        ->name('admin.login');
+    Route::post('admin/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])
+        ->name('admin.login.submit');
+    Route::get('admin/forgot-password', [App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])
+        ->name('admin.password.request');
+    Route::post('admin/forgot-password', [App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])
+        ->name('admin.password.email');
+    
+    // User registration routes
+    Route::get('register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
+        ->name('register');
+    Route::post('register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
+    
+    // Producer registration routes
+    Route::get('producer/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
+        ->name('producer.register');
+    Route::post('producer/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
     
     // Protected routes with auth
     Route::middleware(['auth'])->group(function () {
-        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+        Route::post('logout', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])->name('logout');
         // Other protected routes...
     });
 });
 Route::get('migrate',[LanguageController::class,'migration']);
+
+// Producer Routes
+Route::middleware(['auth', 'role:producer'])->prefix('producer')->group(function () {
+    Route::get('/dashboard', [ProducerDashboardController::class, 'index'])->name('producer.dashboard');
+    Route::get('profile', [ProducerController::class, 'edit'])->name('producer.profile.edit');
+    Route::put('profile', [ProducerController::class, 'update'])->name('producer.profile.update');
+});
+
+// Temporary generic terms route
+Route::view('/terms', 'terms')->name('terms');
+
+// Temporary generic privacy policy route
+Route::view('/privacy', 'privacy')->name('privacy');

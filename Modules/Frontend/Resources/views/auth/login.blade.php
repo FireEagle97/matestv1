@@ -24,8 +24,20 @@
 
                                 <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
 
-                                <h5>{{ __('frontend.sign_in_title') }}</h5>
-                                <p class="fs-14">{{ __('frontend.sign_in_sub_title') }}</p>
+                                <h5>
+                                    @if(request()->is('producer/login'))
+                                        {{ __('Producer Login') }}
+                                    @else
+                                        {{ __('frontend.sign_in_title') }}
+                                    @endif
+                                </h5>
+                                <p class="fs-14">
+                                    @if(request()->is('producer/login'))
+                                        {{ __('Sign in to manage your movies and earnings.') }}
+                                    @else
+                                        {{ __('frontend.sign_in_sub_title') }}
+                                    @endif
+                                </p>
                                 @if (session()->has('error'))
                                     <span class="text-danger">{{ session()->get('error') }}</span>
                                 @endif
@@ -52,7 +64,13 @@
                                 <button type="submit"  id="login-button" class="btn btn-primary w-100">
                                     {{__('frontend.sign_in')}}
                                 </button>
-                                <p class="mt-2 mb-0 fw-normal">{{__('frontend.not_have_account')}}<a href="{{route('register-page')}}" class="ms-1">{{__('frontend.sign_up')}}</a></p>
+                                <p class="mt-2 mb-0 fw-normal">
+                                    @if(request()->is('producer/login'))
+                                        {{__("Don't have a producer account?")}}<a href="{{route('producer.register')}}" class="ms-1">{{__('Register as Producer')}}</a>
+                                    @else
+                                        {{__('frontend.not_have_account')}}<a href="{{route('register-page')}}" class="ms-1">{{__('frontend.sign_up')}}</a>
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="border-style">

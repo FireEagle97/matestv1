@@ -15,7 +15,17 @@ class AuthenticatedSessionController extends Controller
     use AuthTrait;
 
     /**
-     * Display the login view.
+     * Display the user/producer login view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showUserLogin()
+    {
+        return view('frontend::auth.login');
+    }
+
+    /**
+     * Display the admin login view.
      *
      * @return \Illuminate\View\View
      */
@@ -31,23 +41,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-
         $isLogin = $this->loginTrait($request);
         if ($isLogin) {
-
             if (isset($isLogin['error'])) {
-
                 return back()->withErrors([
                     'email' => $isLogin['error']
                 ])->onlyInput('email');
             } elseif ($isLogin['status'] == 406) {
-
                 return back()->withErrors([
                     'email' => $isLogin['message']
                 ])->onlyInput('email');
-
             } else {
-
                 $request->session()->regenerate();
 
                 Artisan::call('cache:clear');
@@ -56,9 +60,12 @@ class AuthenticatedSessionController extends Controller
                 Artisan::call('config:cache');
                 Artisan::call('route:clear');
 
-
-
-            return redirect('app/dashboard');
+                // Redirect based on user type
+                $user = Auth::user();
+                if ($user->hasRole('producer')) {
+                    return redirect()->route('producer.dashboard');
+                }
+                return redirect('app/dashboard');
             }
         }
 
@@ -80,6 +87,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/admin/login');
+        return redirect('/login');
     }
 }

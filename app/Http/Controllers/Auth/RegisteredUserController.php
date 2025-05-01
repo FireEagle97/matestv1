@@ -17,9 +17,9 @@ class RegisteredUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('auth.register');
+        return view('frontend::auth.registration');
     }
 
     /**
@@ -31,6 +31,12 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
+        // Determine user type based on route
+        $userType = $request->is('producer/register') ? 'producer' : 'user';
+        
+        // Add user_type to request for AuthTrait
+        $request->merge(['user_type' => $userType]);
+        
         $user = $this->registerTrait($request);
 
         $user = Auth::login($user);

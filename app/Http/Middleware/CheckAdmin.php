@@ -19,7 +19,7 @@ class CheckAdmin
 
        if(Auth::check() && Auth::user()->hasrole('user')) {
 
-            return redirect()->route('user.login');
+            return redirect()->route('login');
         }
 
         return $next($request);

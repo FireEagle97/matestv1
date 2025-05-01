@@ -9,20 +9,30 @@
                 <div class="col-lg-5 col-md-8 col-11 align-self-center">
                     <div class="user-login-card card my-5">
                         <div class="text-center auth-heading">
+                            @php
+                                $logo = GetSettingValue('dark_logo') ?? asset(setting('dark_logo'));
+                            @endphp
 
-                                @php
-                                  $logo=GetSettingValue('dark_logo') ??  asset(setting('dark_logo'));
-                                 @endphp
+                            <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
 
-                                <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
-
-
-                            <h5>{{ __('frontend.sign_up_title') }}</h5>
-                            <p class="font-size-14">{{ __('frontend.sign_sub_title') }}</p>
+                            <h5>
+                                @if(request()->is('producer/register'))
+                                    {{ __('Producer Registration') }}
+                                @else
+                                    {{ __('frontend.sign_up_title') }}
+                                @endif
+                            </h5>
+                            <p class="font-size-14">
+                                @if(request()->is('producer/register'))
+                                    {{ __('Create your producer account to start managing your content.') }}
+                                @else
+                                    {{ __('frontend.sign_sub_title') }}
+                                @endif
+                            </p>
                         </div>
                         <p class="text-danger" id="error_message"></p>
-                        <form id="registerForm" action="post" class="requires-validation" data-toggle="validator" novalidate>
-
+                        <form id="registerForm" action="{{ request()->is('producer/register') ? route('producer.register') : route('store-user') }}" method="POST" class="requires-validation" data-toggle="validator" novalidate>
+                            @csrf
                             <div class="input-group mb-3">
                                 <span class="input-group-text px-0"><i class="ph ph-user"></i></span>
                                 <input type="text" name="first_name" class="form-control" placeholder="{{ __('frontend.first_name') }}" required >
@@ -54,7 +64,13 @@
                                 <button type="submit" id="register-button" class="btn btn-primary w-100" data-signup-text="{{ __('frontend.sign_up') }}">
                                     {{ __('frontend.sign_up') }}
                                 </button>
-                                <p class="mt-2 mb-0 fw-normal"> {{ __('frontend.already_have_account') }} <a href="{{ route('login') }}" class="ms-1">{{ __('frontend.signin') }}</a></p>
+                                <p class="mt-2 mb-0 fw-normal">
+                                    @if(request()->is('producer/register'))
+                                        {{ __('Already have a producer account?') }} <a href="{{ route('producer.login') }}" class="ms-1">{{ __('Sign in') }}</a>
+                                    @else
+                                        {{ __('frontend.already_have_account') }} <a href="{{ route('login') }}" class="ms-1">{{ __('frontend.signin') }}</a>
+                                    @endif
+                                </p>
                             </div>
                         </form>
                     </div>

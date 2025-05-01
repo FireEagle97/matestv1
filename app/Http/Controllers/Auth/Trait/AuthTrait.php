@@ -18,9 +18,19 @@ trait AuthTrait
 
         if (Auth::attempt(['email' => $email, 'password' => $password, 'status' => 1], $remember)) {
             $user = auth()->user();
-            if($user->hasRole('user')){
-                Auth::logout();
-               return ['status' => 406, 'message' => 'Unauthorized role & The provided credentials do not match our records'];
+            
+            // Check if this is a producer login attempt
+            if ($request->is('producer/login')) {
+                if (!$user->hasRole('producer')) {
+                    Auth::logout();
+                    return ['status' => 406, 'message' => 'Unauthorized role. Only producers can login here.'];
+                }
+            } else {
+                // Regular login - check if user is not a producer
+                if ($user->hasRole('producer')) {
+                    Auth::logout();
+                    return ['status' => 406, 'message' => 'Unauthorized role. Please use producer login.'];
+                }
             }
 
             event(new UserLoginSuccess($request, auth()->user()));
@@ -31,7 +41,6 @@ trait AuthTrait
 
     protected function registerTrait($request, $model = null)
     {
-
         try {
             $request->validate([
                 'first_name' => ['required', 'string', 'max:191'],
@@ -58,7 +67,7 @@ trait AuthTrait
             'address' => $request->address,
             'date_of_birth' => $request->date_of_birth,
             'password' => Hash::make($request->password),
-            'user_type' => 'user',
+            'user_type' => $request->user_type ?? 'user',
             'login_type' => $request->login_type,
         ];
         if (isset($model)) {

@@ -1,5 +1,5 @@
 <div class="logo-default">
-    <a class="navbar-brand text-primary" href="{{route('user.login')}}">
+    <a class="navbar-brand text-primary" href="{{route('login')}}">
 
         @php
 

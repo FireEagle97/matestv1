@@ -11,7 +11,7 @@
     </div>
     <ul class="navbar-nav iq-nav-menu  list-unstyled" id="header-menu">
       <li class="nav-item">
-        <a class="nav-link"  href="{{route('user.login')}}">
+        <a class="nav-link"  href="{{route('login')}}">
           <span class="item-name">{{__('frontend.home')}}</span>
         </a>
       </li>

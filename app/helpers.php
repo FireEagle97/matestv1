@@ -851,10 +851,8 @@ function setBaseUrlWithFileName($url = '')
 
     // Handle remote URL
     if ($isRemote) {
-        // Return immediately if the remote image exists
-        return $url;
-
-       return checkImageExists($url) ? $url : setDefaultImage();
+        // Validate remote URL exists before returning
+        return checkImageExists($url) ? $url : setDefaultImage();
     }
 
     // Extract the file name
