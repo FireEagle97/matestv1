@@ -100,6 +100,15 @@
 
                             </div>
                         </form>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('admin.login') }}" class="text-decoration-none me-3">Admin Panel</a>
+                            <span class="text-muted">|</span>
+                            @if(request()->is('producer/login'))
+                                <a href="{{ url('/') }}" class="text-decoration-none ms-3">Home Page</a>
+                            @else
+                                <a href="{{ route('producer.login') }}" class="text-decoration-none ms-3">Producer Panel</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
