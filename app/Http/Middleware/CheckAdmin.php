@@ -16,10 +16,13 @@ class CheckAdmin
      */
     public function handle($request, Closure $next)
     {
+        if (!Auth::check()) {
+            return redirect()->route('admin.login');
+        }
 
-       if(Auth::check() && Auth::user()->hasrole('user')) {
-
-            return redirect()->route('login');
+        if (!Auth::user()->hasAnyRole(['admin', 'demo_admin'])) {
+            Auth::logout();
+            return redirect()->route('admin.login')->with('error', 'Unauthorized access. Admin privileges required.');
         }
 
         return $next($request);

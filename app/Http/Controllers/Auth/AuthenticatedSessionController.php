@@ -41,37 +41,60 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $isLogin = $this->loginTrait($request);
-        if ($isLogin) {
-            if (isset($isLogin['error'])) {
-                return back()->withErrors([
-                    'email' => $isLogin['error']
-                ])->onlyInput('email');
-            } elseif ($isLogin['status'] == 406) {
-                return back()->withErrors([
-                    'email' => $isLogin['message']
-                ])->onlyInput('email');
-            } else {
-                $request->session()->regenerate();
-
-                Artisan::call('cache:clear');
-                Artisan::call('config:clear');
-                Artisan::call('view:clear');
-                Artisan::call('config:cache');
-                Artisan::call('route:clear');
-
-                // Redirect based on user type
+        try {
+            $credentials = $request->only('email', 'password');
+            
+            // Attempt authentication
+            if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                if ($user->hasRole('producer')) {
-                    return redirect()->route('producer.dashboard');
-                }
-                return redirect('app/dashboard');
-            }
-        }
+                
+                // Check if user exists and is active
+                if ($user && $user->status == 1) {
+                    // Check if user has admin privileges for admin login
+                    if ($request->is('admin/*') && !$user->hasAnyRole(['admin', 'demo_admin'])) {
+                        Auth::logout();
+                        return back()->withErrors([
+                            'email' => 'You do not have admin privileges.',
+                        ])->onlyInput('email');
+                    }
+                    
+                    $request->session()->regenerate();
+                    
+                    // Clear various caches
+                    Artisan::call('cache:clear');
+                    Artisan::call('config:clear');
+                    Artisan::call('view:clear');
+                    Artisan::call('config:cache');
+                    Artisan::call('route:clear');
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+                    // Redirect based on the route
+                    if ($request->is('admin/*')) {
+                        return redirect()->intended('/app/dashboard');
+                    }
+                    
+                    return redirect()->intended('app/dashboard');
+                }
+                
+                // If user is inactive, logout and return with error
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is inactive.',
+                ])->onlyInput('email');
+            }
+
+            // If authentication failed
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Login Error: ' . $e->getMessage());
+            
+            return back()->withErrors([
+                'email' => 'An error occurred during login. Please try again.',
+            ])->onlyInput('email');
+        }
     }
 
     /**
@@ -86,6 +109,11 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        // Check if the request is coming from admin routes
+        if ($request->is('admin/*') || $request->is('app/*')) {
+            return redirect()->route('admin.login');
+        }
 
         return redirect('/login');
     }

@@ -26,21 +26,22 @@ if (user_registration()) {
 
 Route::middleware('guest')->prefix('admin')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('admin-login');
+        ->name('admin.login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])
+        ->name('admin.login.submit');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
+        ->name('admin.password.request');
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
+        ->name('admin.password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
+        ->name('admin.password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
+        ->name('admin.password.update');
 });
 
 
@@ -62,7 +63,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('admin-logout');
+        ->name('admin.logout');
 });
 
 // Social Login Routes

@@ -143,14 +143,18 @@ class="nav navbar navbar-expand-xl navbar-light iq-navbar header-hover-menu left
                         @endrole
 
                         <li>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                href="{{ route('admin-logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                @lang('messages.logout')<i class="ph ph-sign-out"></i>
+                            <a class="dropdown-item"
+                                href="{{ route('admin.logout') }}"
+                                onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                <i class="ph ph-sign-out"></i>
+                                {{ __('frontend.logout') }}
                             </a>
                         </li>
-                        <form id="logout-form" action="{{ route('admin-logout') }}" method="POST"
-                            style="display: none;"> @csrf </form>
+                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                            class="d-none">
+                            @csrf
+                        </form>
                     </ul>
                 </li>
             </ul>
