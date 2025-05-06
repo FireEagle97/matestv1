@@ -10,11 +10,11 @@ if (togglePassword) {
 }
 
 const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword')
-const confirm_password = document.querySelector('#confirm_password')
-if (toggleConfirmPassword) {
+const password_confirmation = document.querySelector('#password_confirmation')
+if (toggleConfirmPassword && password_confirmation) {
   toggleConfirmPassword.addEventListener('click', function () {
-    const type_confirm = confirm_password.getAttribute('type') === 'password' ? 'text' : 'password'
-    confirm_password.setAttribute('type', type_confirm)
+    const type_confirm = password_confirmation.getAttribute('type') === 'password' ? 'text' : 'password'
+    password_confirmation.setAttribute('type', type_confirm)
     this.classList.toggle('fa-eye-slash')
   })
 }
@@ -94,14 +94,14 @@ function validateRegisterForm() {
   const lastName = registerForm.querySelector('input[name="last_name"]')
   const email = registerForm.querySelector('input[name="email"]')
   const password = registerForm.querySelector('input[name="password"]')
-  const confirm_password = registerForm.querySelector('input[name="confirm_password"]')
+  const password_confirmation = registerForm.querySelector('input[name="password_confirmation"]')
 
   // Clear previous error messages
   clearValidationError(firstName)
   clearValidationError(lastName)
   clearValidationError(email)
   clearValidationError(password)
-  clearValidationError(confirm_password)
+  clearValidationError(password_confirmation)
 
   if (!firstName.value.trim()) {
     showValidationError(firstName, 'First Name field is required.')
@@ -129,11 +129,11 @@ function validateRegisterForm() {
     isValid = false
   }
 
-  if (!confirm_password.value) {
-    showValidationError(confirm_password, 'Please confirm your password.')
+  if (!password_confirmation.value) {
+    showValidationError(password_confirmation, 'Please confirm your password.')
     isValid = false
-  } else if (password.value !== confirm_password.value) {
-    showValidationError(confirm_password, 'Passwords do not match.')
+  } else if (password.value !== password_confirmation.value) {
+    showValidationError(password_confirmation, 'Passwords do not match.')
     isValid = false
   }
 
@@ -141,7 +141,9 @@ function validateRegisterForm() {
 }
 
 function showValidationError(input, message) {
+  if (!input) return
   const container = input.closest('.input-group')
+  if (!container) return
   const errorFeedback = container.querySelector('.invalid-feedback')
   if (errorFeedback) {
     errorFeedback.textContent = message
@@ -150,7 +152,9 @@ function showValidationError(input, message) {
 }
 
 function clearValidationError(input) {
+  if (!input) return
   const container = input.closest('.input-group')
+  if (!container) return
   const errorFeedback = container.querySelector('.invalid-feedback')
   if (errorFeedback) {
     errorFeedback.textContent = ''

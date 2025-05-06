@@ -50,14 +50,6 @@ class AuthenticatedSessionController extends Controller
                 
                 // Check if user exists and is active
                 if ($user && $user->status == 1) {
-                    // Check if user has admin privileges for admin login
-                    if ($request->is('admin/*') && !$user->hasAnyRole(['admin', 'demo_admin'])) {
-                        Auth::logout();
-                        return back()->withErrors([
-                            'email' => 'You do not have admin privileges.',
-                        ])->onlyInput('email');
-                    }
-                    
                     $request->session()->regenerate();
                     
                     // Clear various caches
@@ -71,7 +63,9 @@ class AuthenticatedSessionController extends Controller
                     if ($request->is('admin/*')) {
                         return redirect()->intended('/app/dashboard');
                     }
-                    
+                    if ($request->is('producer/login')) {
+                        return redirect()->intended(route('producer.dashboard'));
+                    }
                     return redirect()->intended('app/dashboard');
                 }
                 

@@ -56,7 +56,7 @@
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text px-0"><i class="ph ph-lock-key"></i></span>
-                                <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="{{ __('frontend.confirm_password') }}" required >
+                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="{{ __('frontend.confirm_password') }}" required >
                                 <span class="input-group-text px-0"><i class="ph ph-eye" id="toggleConfirmPassword"></i></span>
                                 <div class="invalid-feedback" id="confirm_password_error">Confirm Password field is required</div>
                             </div>

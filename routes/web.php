@@ -187,20 +187,16 @@ Route::group(['prefix' => 'app', ['middleware' => ['auth','admin']]], function (
 
 Route::middleware(['web'])->group(function () {
     // Public routes
-    Route::get('login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'showUserLogin'])
-        ->name('login');
-    Route::post('login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+    Route::get('login', [App\Http\Controllers\Auth\UserLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [App\Http\Controllers\Auth\UserLoginController::class, 'login'])->middleware('check.login.role');
     
     // Producer login routes
-    Route::get('producer/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'showUserLogin'])
-        ->name('producer.login');
-    Route::post('producer/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+    Route::get('producer/login', [App\Http\Controllers\Auth\ProducerLoginController::class, 'showLoginForm'])->name('producer.login');
+    Route::post('producer/login', [App\Http\Controllers\Auth\ProducerLoginController::class, 'login'])->middleware('check.login.role')->name('producer.login.submit');
     
     // Admin login routes
-    Route::get('admin/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
-        ->name('admin.login');
-    Route::post('admin/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])
-        ->name('admin.login.submit');
+    Route::get('admin/login', [App\Http\Controllers\Auth\AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('admin/login', [App\Http\Controllers\Auth\AdminLoginController::class, 'login'])->middleware('check.login.role')->name('admin.login.submit');
     Route::get('admin/forgot-password', [App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])
         ->name('admin.password.request');
     Route::post('admin/forgot-password', [App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])
