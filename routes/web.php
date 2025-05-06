@@ -19,6 +19,8 @@ use Modules\Frontend\Http\Controllers\FrontendController;
 use App\Http\Controllers\Producer\ProducerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Producer\ProducerDashboardController;
+use App\Http\Controllers\Producer\ProducerContentController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -225,6 +227,13 @@ Route::middleware(['auth', 'role:producer'])->prefix('producer')->group(function
     Route::get('/dashboard', [ProducerDashboardController::class, 'index'])->name('producer.dashboard');
     Route::get('profile', [ProducerController::class, 'edit'])->name('producer.profile.edit');
     Route::put('profile', [ProducerController::class, 'update'])->name('producer.profile.update');
+    
+    // Content Management Routes
+    Route::get('content/create', [ProducerContentController::class, 'create'])->name('producer.content.create');
+    Route::post('content', [ProducerContentController::class, 'store'])->name('producer.content.store');
+    Route::get('content/{content}/edit', [ProducerContentController::class, 'edit'])->name('producer.content.edit');
+    Route::put('content/{content}', [ProducerContentController::class, 'update'])->name('producer.content.update');
+    Route::get('content/{content}/analytics', [ProducerContentController::class, 'analytics'])->name('producer.content.analytics');
 });
 
 // Temporary generic terms route
@@ -232,3 +241,10 @@ Route::view('/terms', 'terms')->name('terms');
 
 // Temporary generic privacy policy route
 Route::view('/privacy', 'privacy')->name('privacy');
+
+// Profile Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});

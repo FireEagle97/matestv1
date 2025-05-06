@@ -12,7 +12,8 @@
     "devDependencies": {
         "@intlify/vue-i18n-loader": "^5.0.0",
         "@popperjs/core": "^2.11.6",
-        "autoprefixer": "10.4.5",
+        "@tailwindcss/postcss7-compat": "^2.2.17",
+        "autoprefixer": "^10.4.5",
         "axios": "^1.6.8",
         "bootstrap": "^5.3.3",
         "husky": "^4.3.8",
@@ -20,11 +21,13 @@
         "laravel-mix": "^6.0.49",
         "lodash": "^4.17.21",
         "path": "^0.12.7",
+        "postcss": "^8.5.3",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.56.1",
         "sass-loader": "^13.2.0",
         "select2": "^4.1.0-rc.0",
         "smooth-scrollbar": "^8.6.2",
+        "tailwindcss": "^4.1.5",
         "unplugin-vue-components": "^0.25.1",
         "video.js": "^8.17.4",
         "vue": "^3.2.45",
@@ -45,6 +48,7 @@
         "@vimeo/player": "^2.24.0",
         "@vueform/multiselect": "~2.5.8",
         "@vueup/vue-quill": "^1.2.0",
+        "alpinejs": "^3.14.9",
         "bootstrap-vue-next": "^0.9.26",
         "datatables.net-bs5": "^1.11.2",
         "dotenv": "^16.3.1",
@@ -75,8 +79,5 @@
         "vue3-tel-input": "^1.0.4",
         "vuedraggable": "^4.1.0",
         "yup": "^1.4.0"
-    },
-    "husky": {
-        "hooks": {}
     }
 }

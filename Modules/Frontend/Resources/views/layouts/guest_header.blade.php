@@ -63,6 +63,7 @@
                         </div>
                      </div>
                      <ul class="d-flex flex-column gap-3 list-inline m-0 p-0">
+                        
                         <li>
                            <a href="{{ route('watchList') }}" class="link-body-emphasis font-size-14">
                                <span class="d-flex align-items-center justify-content-between gap-3">

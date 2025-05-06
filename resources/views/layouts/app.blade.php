@@ -8,7 +8,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="session-id" content="10">
-        <meta name="setting_options" content="{{ setting('customization_json') }}">
+        <meta name="setting_options" content="{{ json_encode(setting('customization_json')) }}">
         <link rel="icon" type="image/png" href="{{ GetSettingValue('favicon') ?? asset('img/logo/favicon.png')   }}">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ GetSettingValue('favicon') ?? asset('img/logo/favicon.png')  }}">
 
@@ -20,7 +20,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <script src="{{ mix('js/app.js') }}" defer></script>
         <style>
         :root{
           <?php
@@ -63,7 +64,7 @@
                                 <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                                     {{ __('Home') }}
                                 </x-nav-link>
-                                <x-nav-link :href="route('movies.index')" :active="request()->routeIs('movies.*')">
+                                <x-nav-link :href="route('movies')" :active="request()->routeIs('movies')">
                                     {{ __('Movies') }}
                                 </x-nav-link>
                                 @auth

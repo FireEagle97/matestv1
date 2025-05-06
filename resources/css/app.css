@@ -1,3 +1,21 @@
+/* Base styles */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+/* Custom styles */
+.bg-white {
+    background-color: #ffffff;
+}
+
+.text-gray-700 {
+    color: #374151;
+}
+
+.hover\:bg-gray-100:hover {
+    background-color: #f3f4f6;
+}
+
+.focus\:bg-gray-100:focus {
+    background-color: #f3f4f6;
+}

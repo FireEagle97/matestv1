@@ -130,6 +130,16 @@
                                                 </div>
                                             </div>
                                             <ul class="d-flex flex-column gap-3 list-inline m-0 p-0">
+                                            @if(auth()->user()->user_type == 'producer')
+                                                <li>
+                                                    <a href="{{ route('producer.dashboard') }}" class="link-body-emphasis font-size-14">
+                                                        <span class="d-flex align-items-center justify-content-between gap-3">
+                                                            <span class="fw-medium">{{__('My Dashboard')}}</span>
+                                                            <i class="ph ph-caret-right"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                @endif
                                                 <li>
                                                     <a href="{{ route('watchList') }}" class="link-body-emphasis font-size-14">
                                                         <span class="d-flex align-items-center justify-content-between gap-3">

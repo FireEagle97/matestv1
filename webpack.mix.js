@@ -1,5 +1,6 @@
 const mix = require('laravel-mix')
 const path = require('path')
+const tailwindcss = require('@tailwindcss/postcss7-compat')
 
 if (process.env.MIX_PUBLIC_PATH !== null && process.env.MIX_PUBLIC_PATH !== undefined && process.env.MIX_PUBLIC_PATH !== '') {
   mix.setPublicPath('public').webpackConfig({
@@ -36,17 +37,17 @@ mix.scripts(['public/js/core/libs.min.js', 'public/js/backend-custom.js'], 'publ
 mix.alias({
   '@': path.join(__dirname, 'resources/js')
 })
-mix.js('resources/js/app.js', 'public/js').sass('resources/sass/app.scss', 'public/css')
-
+mix
+  .js('resources/js/app.js', 'public/js')
+  .vue()
+  .postCss('resources/css/app.css', 'public/css', [require('@tailwindcss/postcss7-compat'), require('autoprefixer')])
+  .version()
 
 mix.js('resources/js/import-export.js', 'public/js/import-export.min.js')
 mix.js('resources/js/media/media.js', 'public/js/media/media.min.js')
 mix.js('Modules/Frontend/Resources/assets/js/auth.js', 'public/js/auth.min.js')
 mix.js('Modules/Frontend/Resources/assets/js/entertainment.js', 'public/js/entertainment.min.js')
 mix.js('Modules/Frontend/Resources/assets/js/videoplayer.js', 'public/js/videoplayer.min.js')
-
-
-
 
 /**
  * !Module Based Script & Style Bundel
