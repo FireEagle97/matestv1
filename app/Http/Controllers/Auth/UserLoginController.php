@@ -26,7 +26,7 @@ class UserLoginController extends Controller
                 Artisan::call('view:clear');
                 Artisan::call('config:cache');
                 Artisan::call('route:clear');
-                return redirect()->intended('/app/dashboard');
+                return redirect()->intended('/admin/dashboard');
             }
             Auth::logout();
             return back()->withErrors(['email' => 'You do not have user privileges.'])->onlyInput('email');

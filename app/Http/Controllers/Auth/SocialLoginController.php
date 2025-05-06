@@ -26,7 +26,7 @@ class SocialLoginController extends Controller
         if ($redirectTo) {
             return $redirectTo;
         } else {
-            return RouteServiceProvider::HOME;
+            return RouteServiceProvider::ADMIN_LOGIN_REDIRECT;
         }
     }
 
@@ -57,7 +57,7 @@ class SocialLoginController extends Controller
             return redirect('/');
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(RouteServiceProvider::ADMIN_LOGIN_REDIRECT);
     }
 
     /**
@@ -93,7 +93,7 @@ class SocialLoginController extends Controller
 
                 flash('Email address is required!')->error()->important();
 
-                return redirect()->intended(RouteServiceProvider::HOME);
+                return redirect()->intended(RouteServiceProvider::ADMIN_LOGIN_REDIRECT);
             }
 
             $user = User::create([

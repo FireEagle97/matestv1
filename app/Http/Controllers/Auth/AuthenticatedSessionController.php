@@ -61,12 +61,12 @@ class AuthenticatedSessionController extends Controller
 
                     // Redirect based on the route
                     if ($request->is('admin/*')) {
-                        return redirect()->intended('/app/dashboard');
+                        return redirect()->intended('/admin/dashboard');
                     }
                     if ($request->is('producer/login')) {
                         return redirect()->intended(route('producer.dashboard'));
                     }
-                    return redirect()->intended('app/dashboard');
+                    return redirect()->intended('admin/dashboard');
                 }
                 
                 // If user is inactive, logout and return with error

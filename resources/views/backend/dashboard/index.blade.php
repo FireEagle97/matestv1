@@ -368,7 +368,7 @@ const formatCurrencyvalue = (value) => {
 
     document.addEventListener('DOMContentLoaded', function() {
         var Base_url = "{{ url('/') }}";
-        var url = Base_url + "/app/get_genre_chart_data";
+        var url = Base_url + "/admin/get_genre_chart_data";
 
         $.ajax({
             url: url,
@@ -417,7 +417,7 @@ const formatCurrencyvalue = (value) => {
 
     function revanue_chart(type) {
     var Base_url = "{{ url('/') }}";
-    var url = Base_url + "/app/get_revnue_chart_data/" + type;
+    var url = Base_url + "/admin/get_revnue_chart_data/" + type;
 
     $("#revenue_loader").show();
 
@@ -502,7 +502,7 @@ const formatCurrencyvalue = (value) => {
 
     function subscriber_chart(type) {
         var Base_url = "{{ url('/') }}";
-        var url = Base_url + "/app/get_subscriber_chart_data/" + type;
+        var url = Base_url + "/admin/get_subscriber_chart_data/" + type;
 
         $("#subscriber_loader").show();
 
@@ -600,7 +600,7 @@ const formatCurrencyvalue = (value) => {
 
     document.addEventListener('DOMContentLoaded', function() {
     var Base_url = "{{ url('/') }}";
-    var url = Base_url + "/app/get_toprated_chart_data";
+    var url = Base_url + "/admin/get_toprated_chart_data";
 
     $.ajax({
         url: url,
@@ -713,7 +713,7 @@ const formatCurrencyvalue = (value) => {
 
     function mostwatch_chart(type) {
         var Base_url = "{{ url('/') }}";
-        var url = Base_url + "/app/get_mostwatch_chart_data/" + type;
+        var url = Base_url + "/admin/get_mostwatch_chart_data/" + type;
 
         $("#mostwatch_loader").show();
 

@@ -9,39 +9,17 @@
             <div class="row justify-content-center align-items-center height-self-center vh-100">
                 <div class="col-lg-5 col-md-8 col-11 align-self-center">
                     <div class="user-login-card card my-5">
-                        <!-- <div class="text-center auth-heading">
+                        <div class="text-center auth-heading">
+                            @php
+                              $logo=GetSettingValue('dark_logo') ??  asset(setting('dark_logo'));
+                            @endphp
+                            <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
                             <h5>{{ __('frontend.sign_in_title') }}</h5>
                             <p class="fs-14">{{ __('frontend.sign_in_sub_title') }}</p>
-                            @if(session()->has('error'))
-                                <span class="text-danger">{{session()->get('error')}}</span>
+                            @if (session()->has('error'))
+                                <span class="text-danger">{{ session()->get('error') }}</span>
                             @endif
-                        </div> -->
-
-                        <div class="text-center auth-heading">
-                                @php
-                                  $logo=GetSettingValue('dark_logo') ??  asset(setting('dark_logo'));
-                                 @endphp
-
-                                <img src="{{ $logo }}" class="img-fluid logo h-4 mb-4">
-
-                                <h5>
-                                    @if(request()->is('producer/login'))
-                                        {{ __('Producer Login') }}
-                                    @else
-                                        {{ __('frontend.sign_in_title') }}
-                                    @endif
-                                </h5>
-                                <p class="fs-14">
-                                    @if(request()->is('producer/login'))
-                                        {{ __('Sign in to manage your movies and earnings.') }}
-                                    @else
-                                        {{ __('frontend.sign_in_sub_title') }}
-                                    @endif
-                                </p>
-                                @if (session()->has('error'))
-                                    <span class="text-danger">{{ session()->get('error') }}</span>
-                                @endif
-                            </div>
+                        </div>
 
                         <p class="text-danger" id="login_error_message"></p>
                         <form action="post" id="login-form" class="requires-validation" data-toggle="validator" novalidate>
@@ -65,11 +43,7 @@
                                     {{__('frontend.sign_in')}}
                                 </button>
                                 <p class="mt-2 mb-0 fw-normal">
-                                    @if(request()->is('producer/login'))
-                                        {{__("Don't have a producer account?")}}<a href="{{route('producer.register')}}" class="ms-1">{{__('Register as Producer')}}</a>
-                                    @else
-                                        {{__('frontend.not_have_account')}}<a href="{{route('register-page')}}" class="ms-1">{{__('frontend.sign_up')}}</a>
-                                    @endif
+                                    {{__('frontend.not_have_account')}}<a href="{{route('register-page')}}" class="ms-1">{{__('frontend.sign_up')}}</a>
                                 </p>
                             </div>
 
@@ -78,7 +52,6 @@
                             </div>
 
                             <div class="full-button text-center">
-
                                 <a href="{{route('auth.google')}}" class="d-block">
                                     <span  id="google-login" class="btn btn-dark w-100">
                                     <svg class="me-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,18 +69,12 @@
                                     {{__('frontend.login_with_otp')}}
                                     </span>
                                 </a>
-
-
                             </div>
                         </form>
                         <div class="text-center mt-3">
                             <a href="{{ route('admin.login') }}" class="text-decoration-none me-3">Admin Panel</a>
                             <span class="text-muted">|</span>
-                            @if(request()->is('producer/login'))
-                                <a href="{{ url('/') }}" class="text-decoration-none ms-3">Home Page</a>
-                            @else
-                                <a href="{{ route('producer.login') }}" class="text-decoration-none ms-3">Producer Panel</a>
-                            @endif
+                            <a href="{{ route('producer.login') }}" class="text-decoration-none ms-3">Producer Panel</a>
                         </div>
                     </div>
                 </div>
@@ -126,13 +93,12 @@
 
             if (passwordInput && toggleIcon) {
                 toggleIcon.addEventListener('click', function() {
-                    // Check current type and toggle
                     if (passwordInput.type === 'password') {
                         passwordInput.type = 'text';
-                        toggleIcon.innerHTML = '<i class="ph ph-eye-slash"></i>'; // Change to eye-slash when visible
+                        toggleIcon.innerHTML = '<i class="ph ph-eye-slash"></i>';
                     } else {
                         passwordInput.type = 'password';
-                        toggleIcon.innerHTML = '<i class="ph ph-eye"></i>'; // Change to eye when hidden
+                        toggleIcon.innerHTML = '<i class="ph ph-eye"></i>';
                     }
                 });
             }
@@ -141,8 +107,6 @@
         togglePasswordVisibility();
     });
 </script>
-
-
 
 @endsection
 

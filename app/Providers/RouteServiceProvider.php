@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -17,10 +18,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-
-
     public const USER_LOGIN_REDIRECT = '/';
-    public const HOME = '/app/dashboard';
+    public const ADMIN_LOGIN_REDIRECT = '/admin/dashboard';
+    public const PRODUCER_LOGIN_REDIRECT = '/producer/dashboard';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -42,6 +42,24 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the redirect path based on user type
+     *
+     * @return string
+     */
+    public static function getRedirectPath()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->hasRole('producer')) {
+                return self::PRODUCER_LOGIN_REDIRECT;
+            }
+            if (Auth::user()->hasAnyRole(['admin', 'demo_admin'])) {
+                return self::ADMIN_LOGIN_REDIRECT;
+            }
+        }
+        return self::USER_LOGIN_REDIRECT;
+    }
+
+    /**
      * Configure the rate limiters for the application.
      *
      * @return void
@@ -59,7 +77,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapWebRoutes();
-        $this->mapAccountsRoutes(); // Add this line
+        $this->mapAccountsRoutes();
     }
 
     protected function mapAccountsRoutes()

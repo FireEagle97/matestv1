@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth','admin']], function () {
     Route::delete('notification-remove/{id}', [NotificationsController::class, 'notificationRemove'])->name('notification.remove');
 });
 
-Route::group(['prefix' => 'app', ['middleware' => ['auth','admin']]], function () {
+Route::group(['prefix' => 'admin', ['middleware' => ['auth','admin']]], function () {
     // Language Switch
     Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
     Route::post('set-user-setting', [BackendController::class, 'setUserSetting'])->name('backend.setUserSetting');
