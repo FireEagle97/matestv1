@@ -98,6 +98,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        $user = Auth::user();
+        $isProducer = $user && $user->hasRole('producer');
+
         Auth::logout();
 
         $request->session()->invalidate();
@@ -107,6 +110,11 @@ class AuthenticatedSessionController extends Controller
         // Check if the request is coming from admin routes
         if ($request->is('admin/*') || $request->is('app/*')) {
             return redirect()->route('admin.login');
+        }
+
+        // Redirect producers to producer login page
+        if ($isProducer) {
+            return redirect()->route('producer.login');
         }
 
         return redirect('/login');

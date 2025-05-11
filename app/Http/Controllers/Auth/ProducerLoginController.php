@@ -26,7 +26,7 @@ class ProducerLoginController extends Controller
                 Artisan::call('view:clear');
                 Artisan::call('config:cache');
                 Artisan::call('route:clear');
-                return redirect(\App\Providers\RouteServiceProvider::PRODUCER_LOGIN_REDIRECT);
+                return redirect()->intended(route('producer.dashboard'));
             }
             Auth::logout();
             return back()->withErrors(['email' => 'You do not have producer privileges.'])->onlyInput('email');

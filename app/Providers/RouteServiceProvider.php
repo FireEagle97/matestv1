@@ -55,8 +55,17 @@ class RouteServiceProvider extends ServiceProvider
             if (Auth::user()->hasAnyRole(['admin', 'demo_admin'])) {
                 return self::ADMIN_LOGIN_REDIRECT;
             }
+            return self::USER_LOGIN_REDIRECT;
         }
-        return self::USER_LOGIN_REDIRECT;
+
+        // If user is not authenticated, check the previous URL
+        if (request()->is('producer/*')) {
+            return route('producer.login');
+        }
+        if (request()->is('admin/*')) {
+            return route('admin.login');
+        }
+        return route('login');
     }
 
     /**
