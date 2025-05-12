@@ -223,17 +223,24 @@ Route::middleware(['web'])->group(function () {
 Route::get('migrate',[LanguageController::class,'migration']);
 
 // Producer Routes
-Route::middleware(['auth', 'role:producer'])->prefix('producer')->group(function () {
-    Route::get('/dashboard', [ProducerDashboardController::class, 'index'])->name('producer.dashboard');
-    Route::get('profile', [ProducerController::class, 'edit'])->name('producer.profile.edit');
-    Route::put('profile', [ProducerController::class, 'update'])->name('producer.profile.update');
-    
-    // Content Management Routes
-    Route::get('content/create', [ProducerContentController::class, 'create'])->name('producer.content.create');
-    Route::post('content', [ProducerContentController::class, 'store'])->name('producer.content.store');
-    Route::get('content/{content}/edit', [ProducerContentController::class, 'edit'])->name('producer.content.edit');
-    Route::put('content/{content}', [ProducerContentController::class, 'update'])->name('producer.content.update');
-    Route::get('content/{content}/analytics', [ProducerContentController::class, 'analytics'])->name('producer.content.analytics');
+Route::prefix('producer')->name('producer.')->middleware(['auth', 'role:producer'])->group(function () {
+    // Dashboard Routes
+    Route::get('/dashboard', [App\Http\Controllers\Producer\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/get_genre_chart_data', [App\Http\Controllers\Producer\DashboardController::class, 'getGenreChartData']);
+    Route::get('/get_revnue_chart_data/{type}', [App\Http\Controllers\Producer\DashboardController::class, 'getRevenueChartData']);
+    Route::get('/get_subscriber_chart_data/{type}', [App\Http\Controllers\Producer\DashboardController::class, 'getSubscriberChartData']);
+
+    // Users Routes
+    Route::get('/users', [App\Http\Controllers\Producer\UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [App\Http\Controllers\Producer\UserController::class, 'show'])->name('users.show');
+
+    // Subscriptions Routes
+    Route::get('/subscriptions', [App\Http\Controllers\Producer\SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('/subscriptions/{subscription}', [App\Http\Controllers\Producer\SubscriptionController::class, 'show'])->name('subscriptions.show');
+
+    // Reviews Routes
+    Route::get('/reviews', [App\Http\Controllers\Producer\ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/reviews/{review}', [App\Http\Controllers\Producer\ReviewController::class, 'show'])->name('reviews.show');
 });
 
 // Temporary generic terms route

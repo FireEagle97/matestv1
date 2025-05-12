@@ -49,16 +49,25 @@ class RouteServiceProvider extends ServiceProvider
     public static function getRedirectPath()
     {
         if (Auth::check()) {
-            if (Auth::user()->hasRole('producer')) {
+            $user = Auth::user();
+            
+            // Check if user is active
+            if ($user->status != 1) {
+                Auth::logout();
+                return route('login');
+            }
+            
+            // Redirect based on role
+            if ($user->hasRole('producer')) {
                 return self::PRODUCER_LOGIN_REDIRECT;
             }
-            if (Auth::user()->hasAnyRole(['admin', 'demo_admin'])) {
+            if ($user->hasAnyRole(['admin', 'demo_admin'])) {
                 return self::ADMIN_LOGIN_REDIRECT;
             }
             return self::USER_LOGIN_REDIRECT;
         }
 
-        // If user is not authenticated, check the previous URL
+        // If user is not authenticated, check the current route
         if (request()->is('producer/*')) {
             return route('producer.login');
         }

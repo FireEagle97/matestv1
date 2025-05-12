@@ -59,14 +59,14 @@ class AuthenticatedSessionController extends Controller
                     Artisan::call('config:cache');
                     Artisan::call('route:clear');
 
-                    // Redirect based on the route
-                    if ($request->is('admin/*')) {
-                        return redirect()->intended('/admin/dashboard');
-                    }
-                    if ($request->is('producer/login')) {
+                    // Redirect based on user role
+                    if ($user->hasRole('producer')) {
                         return redirect()->intended(route('producer.dashboard'));
                     }
-                    return redirect()->intended('admin/dashboard');
+                    if ($user->hasAnyRole(['admin', 'demo_admin'])) {
+                        return redirect()->intended('/admin/dashboard');
+                    }
+                    return redirect()->intended('/');
                 }
                 
                 // If user is inactive, logout and return with error

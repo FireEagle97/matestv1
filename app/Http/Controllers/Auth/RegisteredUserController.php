@@ -41,6 +41,10 @@ class RegisteredUserController extends Controller
 
         $user = Auth::login($user);
 
-        return redirect(RouteServiceProvider::ADMIN_LOGIN_REDIRECT);
+        // Redirect based on user type
+        if ($userType === 'producer') {
+            return redirect(RouteServiceProvider::PRODUCER_LOGIN_REDIRECT);
+        }
+        return redirect(RouteServiceProvider::USER_LOGIN_REDIRECT);
     }
 }
