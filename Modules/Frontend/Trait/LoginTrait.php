@@ -92,8 +92,8 @@ public function setDevice($user, $request){
     $agent = new Agent();
     $device_id = $request->getClientIp();
 
-    // Skip localhost IPs
-    if ($device_id === '127.0.0.1' || $device_id === '::1') {
+    // Skip all localhost IP variations
+    if (in_array($device_id, ['127.0.0.1', '::1', 'localhost', '0.0.0.0'])) {
         return;
     }
 

@@ -192,18 +192,20 @@ class AuthController extends Controller
 
             $profile=UserMultiProfile::where('user_id',$user->id)->first();
 
-
-            $device = Device::updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'device_id' => $device_id
-                ],
-                [
-                    'device_name' => $device_name,
-                    'platform' => $platform,
-                    'active_profile'=> $profile->id ?? null,
-                ]
-            );
+            // Skip device creation for localhost IPs
+            if (!in_array($device_id, ['127.0.0.1', '::1', 'localhost', '0.0.0.0'])) {
+                $device = Device::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'device_id' => $device_id
+                    ],
+                    [
+                        'device_name' => $device_name,
+                        'platform' => $platform,
+                        'active_profile'=> $profile->id ?? null,
+                    ]
+                );
+            }
 
             $loginResource = new LoginResource($user);
             $message = __('messages.user_login');
@@ -344,17 +346,19 @@ class AuthController extends Controller
 
         }
 
-        $device = Device::updateOrCreate(
-            [
-                'user_id' => $user_data->id,
-                'device_id' => $request->device_id
-            ],
-            [
-                'device_name' => $request->device_name,
-                'platform' => $request->platform
-            ]
-        );
-
+        // Skip device creation for localhost IPs
+        if (!in_array($request->device_id, ['127.0.0.1', '::1', 'localhost', '0.0.0.0'])) {
+            $device = Device::updateOrCreate(
+                [
+                    'user_id' => $user_data->id,
+                    'device_id' => $request->device_id
+                ],
+                [
+                    'device_name' => $request->device_name,
+                    'platform' => $request->platform
+                ]
+            );
+        }
 
         $user_data['api_token'] = $user_data->createToken('auth_token')->plainTextToken;
 
